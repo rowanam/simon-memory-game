@@ -3,6 +3,7 @@ let game = {
     currentGame: [],
     playerMoves: [],
     choices: ["button1", "button2", "button3", "button4"],
+    turnNumber: 0,
 }
 
 /**
@@ -13,7 +14,11 @@ function newGame() {
     game.score = 0;
     game.currentGame = [];
     game.playerMoves = [];
+
+    // Reset DOM starting score display
     showScore();
+
+    // Add first turn to sequence
     addTurn();
 }
 
@@ -25,16 +30,16 @@ function showScore() {
 }
 
 /**
- * Add a turn to current game sequence and clear player moves from pervious turn
+ * Add a turn to current game sequence and call turn showing function
  */
 function addTurn() {
     game.playerMoves = [];
     game.currentGame.push(game.choices[(Math.floor(Math.random() * 4))]);
-    // showTurns();
+    showTurns();
 }
 
 /**
- * Add "light" class to an option button, then remove it after 400ms
+ * Light up an option button for 400ms
  * @param {*} circ - id of option button
  */
 function lightsOn(circ) {
@@ -44,10 +49,25 @@ function lightsOn(circ) {
     }, 400);
 }
 
+/**
+ * Light up each button in the computer game sequence
+ */
+function showTurns() {
+    game.turnNumber = 0;
+    let turns = setInterval(() => {
+        lightsOn(game.currentGame[game.turnNumber]);
+        game.turnNumber++;
+        if (game.turnNumber >= game.currentGame.length) {
+            clearInterval(turns);
+        }
+    }, 800);
+}
+
 module.exports = {
     game,
     newGame,
     showScore,
     addTurn,
-    lightsOn
+    lightsOn,
+    showTurns
 }
