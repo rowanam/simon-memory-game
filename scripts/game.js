@@ -33,9 +33,21 @@ function addTurn() {
     // showTurns();
 }
 
+/**
+ * Add "light" class to an option button, then remove it after 400ms
+ * @param {*} circ - id of option button
+ */
+function lightsOn(circ) {
+    document.getElementById(circ).classList.add("light");
+    setTimeout(() => {
+        document.getElementById(circ).classList.remove("light");
+    }, 400);
+}
+
 module.exports = {
     game,
     newGame,
     showScore,
-    addTurn
+    addTurn,
+    lightsOn
 }
