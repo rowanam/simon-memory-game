@@ -15,6 +15,19 @@ function newGame() {
     game.currentGame = [];
     game.playerMoves = [];
 
+    // Add event listeners for player clicks to option buttons
+    for (let button of document.getElementsByClassName("circle")) {
+        if (button.getAttribute("data-listener") !== "true") {
+            button.addEventListener("click", (e) => {
+                let move = e.target.getAttribute("id");
+                lightsOn(move);
+                game.playerMoves.push(move);
+                playerTurn();
+            });
+            button.setAttribute("data-listener", "true");
+        }
+    }
+
     // Reset DOM starting score display
     showScore();
 
