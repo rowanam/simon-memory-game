@@ -4,6 +4,8 @@ let game = {
     playerMoves: [],
     choices: ["button1", "button2", "button3", "button4"],
     turnNumber: 0,
+    lastButton: "",
+    turnInProgress: false,
 }
 
 /**
@@ -19,10 +21,13 @@ function newGame() {
     for (let button of document.getElementsByClassName("circle")) {
         if (button.getAttribute("data-listener") !== "true") {
             button.addEventListener("click", (e) => {
-                let move = e.target.getAttribute("id");
-                lightsOn(move);
-                game.playerMoves.push(move);
-                playerTurn();
+                if (game.currentGame.length > 0 && !game.turnInProgress) {
+                    let move = e.target.getAttribute("id");
+                    game.lastButton = move;
+                    lightsOn(move);
+                    game.playerMoves.push(move);
+                    playerTurn();
+                }
             });
             button.setAttribute("data-listener", "true");
         }
@@ -66,12 +71,14 @@ function lightsOn(circ) {
  * Light up each button in the computer game sequence
  */
 function showTurns() {
+    game.turnInProgress = true;
     game.turnNumber = 0;
     let turns = setInterval(() => {
         lightsOn(game.currentGame[game.turnNumber]);
         game.turnNumber++;
         if (game.turnNumber >= game.currentGame.length) {
             clearInterval(turns);
+            game.turnInProgress = false;
         }
     }, 800);
 }
