@@ -12,8 +12,11 @@ const {
     showScore,
     addTurn,
     lightsOn,
-    showTurns
+    showTurns,
+    playerTurn
 } = require("../game");
+
+jest.spyOn(window, "alert").mockImplementation(() => {});
 
 beforeAll(() => {
     let fs = require("fs");
@@ -102,5 +105,26 @@ describe("gameplay works correctly", () => {
         game.turnNumber = 42;
         showTurns();
         expect(game.turnNumber).toBe(0);
+    });
+    test("should increment the score if the turn is correct", () => {
+        game.playerMoves.push(game.currentGame[0]);
+        playerTurn();
+        expect(game.score).toBe(1);
+    });
+    test("should add turn when playerMoves array is same as currentGame", () => {
+        game.playerMoves.push(game.currentGame[0]);
+        playerTurn();
+        expect(game.currentGame.length).toBe(2);
+    });
+    test("should call an alert if the move is wrong", () => {
+        game.playerMoves.push("wrong");
+        playerTurn();
+        expect(window.alert).toBeCalledWith("Wrong move!");
+    });
+    test("should have one turn in currentGame after wrong move", () => {
+        game.currentGame = ["button1", "button3", "button4"];
+        game.playerMoves.push("wrong");
+        playerTurn();
+        expect(game.currentGame.length).toBe(1);
     });
 });
